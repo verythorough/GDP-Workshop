@@ -1,0 +1,25 @@
+.site {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+.header {
+  display: flex;
+  padding: 10px 0 10px 0;
+  justify-content: center;
+  background-color: #28A8F0;
+}
+
+.list {
+  border: 0 1px 1px 1px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: lightgray;
+  padding: 5px;
+  height: 500px;
+}
+
+.wide {
+  width: 100%;
+}
