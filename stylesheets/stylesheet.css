@@ -23,3 +23,22 @@
 .wide {
   width: 100%;
 }
+
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.other-info-container {
+  display: flex;
+  margin-left: 5px;
+}
+
+.other-info-container > p:not(:last-child) {
+  width: 100px;
+}
+
+#list-of-repositories{
+  margin-top: 10px;
+}

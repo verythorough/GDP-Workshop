@@ -1,6 +1,6 @@
 # GDP-Workshop
 
-## Branch - Live Code: Task 1 Completed
+## Branch - Live Code: Task 2
 
 ## Welcome!
 
