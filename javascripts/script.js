@@ -9,64 +9,61 @@ function createParagraph(content){
 }
 
 // Insert a repo into the list of repositories
-function insertRepoIntoList(name, url, starCount, issueCount, pullRequestCount){
-  // Container that holds the repository
-  var repoContainer = document.createElement("div");
-  repoContainer.classList.add("repo-container");
+function insertUserIntoList(name, avatar, profile){
+  console.log(avatar);
+  // Link that holds the user
+  var userLink = document.createElement("a");
+  userLink.classList.add("user-link");
+  userLink.setAttribute("href", profile)
 
-  // Name / URL
-  var a = document.createElement("a");
-  a.innerHTML = name;
-  a.setAttribute("href", url)
-  repoContainer.appendChild(a);
+  // Avatar
+  var img = document.createElement("img");
+  img.classList.add("avatar");
+  img.setAttribute("src", avatar);
+  img.setAttribute("alt", name);
+  userLink.appendChild(img);
 
-  // Container that holds other info
-  var otherInfoContainer = document.createElement("div");
-  otherInfoContainer.classList.add("other-info-container");
-
-  otherInfoContainer.appendChild(createParagraph(starCount + " stars"));
-  otherInfoContainer.appendChild(createParagraph(issueCount + " issues"));
-  otherInfoContainer.appendChild(createParagraph(pullRequestCount + " pull requests"));
-
-  // Add our other info to the overall repo container
-  repoContainer.appendChild(otherInfoContainer);
+  //Name
+  var txt = document.createTextNode(name);
+  userLink.appendChild(txt);
 
   // Add our repo to the list of repos
-  list.appendChild(repoContainer);
+  list.appendChild(userLink);
 }
 
 // Process the response from the GraphQL API
 function handleQueryResult(result){
-  var edges = result.data.viewer.repositories.edges;
+  console.log(result);
+  var search = result.data.search;
+  var count = search.issueCount;
+  var edges = search.edges;
+  var users = [];
   for(var i = 0; i < edges.length; i++){
-    var node = edges[i].node;
-
-    var name = node.name;
-    var url = node.url;
-    var stars = node.stargazers.totalCount;
-    var issues = node.issues.totalCount;
-    var pullRequests = node.pullRequests.totalCount;
-
-    insertRepoIntoList(name, url, stars, issues, pullRequests);
+    var author = edges[i].node.author;
+    var name = author.login;
+    if (!users.includes(name)) {
+      users.push(name);
+      var avatar = author.avatarUrl;
+      console.log(author);
+      var profile = author.url;
+      insertUserIntoList(name, avatar, profile);
+    }
   }
 }
 
 // Repository query
 var query = `query{
-  viewer{
-    repositories(first: 5, privacy: PUBLIC, orderBy: {field: CREATED_AT, direction: ASC}){
-      edges{
-        node{
-          name
-          url
-          issues(states: OPEN){
-            totalCount
-          }
-          pullRequests(states:OPEN){
-            totalCount
-          }
-          stargazers{
-            totalCount
+  search (last: 100, query: \\"repo:gdisf/teaching-materials is:pr created:2017-07-28..2017-08-08\\", type: ISSUE) {
+    issueCount
+    edges {
+      node {
+        ... on PullRequest {
+          number
+          createdAt
+          author {
+            avatarUrl
+            login
+            url
           }
         }
       }

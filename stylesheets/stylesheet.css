@@ -42,3 +42,7 @@
 #list-of-repositories{
   margin-top: 10px;
 }
+
+.avatar {
+  height: 2em;
+}
